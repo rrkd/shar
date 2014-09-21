@@ -1,0 +1,7 @@
+<decorators defaultdir="/WEB-INF/decorators">
+
+    <!--driver -->
+    <decorator name="driver" page="default.jsp">
+        <pattern>/dr/home</pattern>
+    </decorator>
+</decorators>

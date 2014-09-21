@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/about</url>
+        <description>Repopulate the cache every 2 minutes</description>
+        <schedule>every 3 minutes</schedule>
+    </cron>
+    <cron>
+        <url>/about</url>
+        <description>Repopulate the cache every 2 minutes</description>
+        <schedule>every 5 minutes</schedule>
+    </cron>
+    <cron>
+        <url>/about</url>
+        <description>Repopulate the cache every 2 minutes</description>
+        <schedule>every 11 minutes</schedule>
+    </cron>
+</cronentries>
