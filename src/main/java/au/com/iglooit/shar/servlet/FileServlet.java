@@ -22,13 +22,14 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
+import java.util.UUID;
 
 /**
  * Servlet providing a small API for the DrEdit JavaScript client to use in
@@ -94,10 +95,19 @@ public class FileServlet extends DrEditServlet {
         ByteArrayContent byteArrayContent = new ByteArrayContent(clientFile.mimeType, imageData);
 
         if (!clientFile.content.equals("")) {
-            file = service.files().insert(file,byteArrayContent)
-                    .execute();
+            if (StringUtils.isBlank(file.getId())) {
+                file = service.files().insert(file, byteArrayContent)
+                        .execute();
+            } else {
+                file = service.files().update(file.getId(), file, byteArrayContent)
+                        .execute();
+            }
         } else {
-            file = service.files().insert(file).execute();
+            if (StringUtils.isBlank(file.getId())) {
+                file = service.files().insert(file).execute();
+            } else {
+                file = service.files().update(file.getId(), file).execute();
+            }
         }
         sendJson(resp, file.getId());
     }
@@ -149,8 +159,7 @@ public class FileServlet extends DrEditServlet {
     }
 
     @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-    {
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // pre-flight request processing
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");

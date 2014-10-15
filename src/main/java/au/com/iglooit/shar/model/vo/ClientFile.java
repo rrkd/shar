@@ -19,6 +19,7 @@ import com.google.api.services.drive.model.File.Labels;
 import com.google.api.services.drive.model.ParentReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Reader;
 import java.io.Serializable;
@@ -85,7 +86,9 @@ public class ClientFile implements Serializable {
      * Creates a new ClientFile based on the given File and content.
      */
     public ClientFile(File file, String content) {
-        this.resourceId = UUID.randomUUID().toString();
+        if (StringUtils.isNotBlank(file.getId())) {
+            this.resourceId = file.getId();
+        }
         this.title = file.getTitle();
         this.description = file.getDescription();
         this.mimeType = file.getMimeType();
@@ -104,7 +107,9 @@ public class ClientFile implements Serializable {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         ClientFile other = gson.fromJson(in, ClientFile.class);
-        this.resourceId = UUID.randomUUID().toString();
+        if (StringUtils.isNotBlank(other.resourceId)) {
+            this.resourceId = other.resourceId;
+        }
         this.title = other.title;
         this.description = other.description;
         this.mimeType = other.mimeType;
@@ -120,6 +125,9 @@ public class ClientFile implements Serializable {
     public File toFile() {
         File file = new File();
         file.setTitle(title);
+        if (StringUtils.isNotBlank(resourceId)) {
+            file.setId(resourceId);
+        }
         file.setDescription(description);
         file.setMimeType(mimeType);
         file.setLabels(labels);
